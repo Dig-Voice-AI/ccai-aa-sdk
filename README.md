@@ -73,7 +73,7 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 
 <h5>InitializeConfig</h5>
 
-```json
+```javascript
 interface InitializeConfig {
     conversationProfile: string; // Google CCAI conversation profile
     connectorUrl: string; // Google Cloud connector URL 
