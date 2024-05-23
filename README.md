@@ -257,6 +257,23 @@ interface TextInput {
 | --- | --- | --- | --- |
 | string | true | - | The UTF-8 encoded natural language text to be processed. Text length must not exceed 256 characters for virtual agent interactions.
 
+<!-- Add Listener -->
+
+#### Add Listener
+
+Adds a new listener for your application to receive events about a certain topic.
+
+<h5>Method</h5>
+
+addListener(topic: string, callback: function): void
+
+<h5>Parameters</h5>
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'conversation-details-received', 'list-messages-response-received'' |
+| callback | function | Yes | - |  The function to return when a new event occurs. |
+
 <!-- ROADMAP -->
 
 ## Roadmap
