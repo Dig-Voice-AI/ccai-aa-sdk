@@ -18,6 +18,7 @@
     <ol>
         <li><a href="#about-the-project">About the Project</a></li>
         <li><a href="#install">Install</a></li>
+        <li><a href="#getting-started">Getting Started</a></li>
         <li><a href="#api-reference">API Reference</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -43,6 +44,37 @@ npm install @ttec-digital/ccai-aa-sdk
 
 ```sh
 yarn add @ttec-digital/ccai-aa-sdk
+```
+
+<!-- Install -->
+
+## Getting Started
+
+The following is an example to get you going quickly.
+
+```html
+<div id="sdk-container">
+</div>
+
+<script type="text/javascript">
+import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk' 
+
+async function initalizeSDK() {
+    const hostElement = document.getElementById("sdk-container")
+
+    try {
+        await agentAssistSdk.initialize(hostElement, {
+            conversationProfile: 'projects/<< project name >>/locations/<< project location name >>/conversationProfiles/<< conversation profile id >>',
+            connectorUrl: '<< cloud run ui connector url >>',
+            channel: 'chat',
+            conversationId: 'CDFED72D0170911EF9F82F86E7BB39694',
+            features: ['GEN_ASSIST', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT'],
+        })  
+    } catch(e) {
+        console.error(e)
+    }
+}
+</script>
 ```
 
 <!-- API Reference -->
