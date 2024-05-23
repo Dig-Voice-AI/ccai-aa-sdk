@@ -91,6 +91,8 @@ async function initalizeSDK() {
 
 #### Initialize
 
+Initializes the SDK in the provided element and sets the config to be used. Always call this method before calling other methods.
+
 <h5>Method</h5>
 
 initialize(element: HTMLElement, config: InitializeConfig): Promise
