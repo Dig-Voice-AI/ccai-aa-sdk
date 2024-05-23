@@ -85,6 +85,8 @@ async function initalizeSDK() {
 <ul>
     <li><a href="#initialize">initialize()</a></li>
     <li><a href="#navigate-to">navigateTo()</a></li>
+    <li><a href="#analyze-content">analyzeContent()</a></li>
+    <li><a href="#add-listener">addListener()</a></li>
 </ul>
 
 <!-- Initialize -->
@@ -102,7 +104,7 @@ initialize(element: HTMLElement, data: InitializeData): Promise
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
-| config | InitializeData | Yes | - | Config for the SDK |
+| data | InitializeData | Yes | - | Config for the SDK |
 
 <h5>Interfaces</h5>
 
@@ -112,7 +114,7 @@ initialize(element: HTMLElement, data: InitializeData): Promise
 interface InitializeData {
     conversationProfile: string;
     connectorUrl: string;
-    channel: enum;
+    channel: string;
     conversationId?: string 
     features: array
     iframeUrl?: string
@@ -135,7 +137,7 @@ interface InitializeData {
 
 | Type | Required | Default | Description |
 | --- | --- | --- | --- |
-| enum | true | - | Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'. When no conversation exists, use 'chat'. |
+| string | true | - | Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'. When no conversation exists, use 'chat'. |
 
 ***conversationId***: 
 
@@ -163,7 +165,13 @@ Changes the active page.
 
 <h5>Method</h5>
 
-navigateTo(data: NavigateToData): Promise
+navigateTo(data: NavigateToData): void
+
+<h5>Parameters</h5>
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| data | NavigateToData | Yes | - |  - |
 
 <h5>Interfaces</h5>
 
@@ -175,9 +183,79 @@ interface NavigateToData {
 }
 ```
 
+***tab***
+
 | Type | Required | Default | Description |
 | --- | --- | --- | --- |
 | string | true | - | The page to change to. Valid Values: 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'
+
+<!-- Analyze Content -->
+
+#### Analyze Content
+
+Sends new content to be analyzed by agent assist.
+
+<h5>Method</h5>
+
+analyzeContent(data: AnalyzeContentData): void
+
+<h5>Parameters</h5>
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| data | AnalyzeContentData | Yes | - |  - |
+
+<h5>Interfaces</h5>
+
+**AnalyzeContentData**
+
+```javascript
+interface AnalyzeContentData {
+    participantRole: string;
+    request: AnalyzeContentRequest;
+}
+```
+
+***participantRole***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | The participant role. Valid Values: 'END_USER', 'HUMAN_AGENT', 'AUTOMATED_AGENT'
+
+***request***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| object | true | - | See AnalyzeContentRequest.
+
+**AnalyzeContentRequest**
+
+```javascript
+interface AnalyzeContentRequest {
+    textInput: TextInput;
+    messageSendTime: string;
+}
+```
+
+***messageSendTime***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | The message timestamp. Example: messageSendTime: new Date().toISOString()
+
+**TextInput**
+
+```javascript
+interface TextInput {
+    text: string;
+}
+```
+
+***text***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | The UTF-8 encoded natural language text to be processed. Text length must not exceed 256 characters for virtual agent interactions.
 
 <!-- ROADMAP -->
 
