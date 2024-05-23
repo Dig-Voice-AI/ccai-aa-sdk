@@ -64,7 +64,7 @@ export const navigateToSchema = {
     type: 'object',
     properties: {
         tab: {
-            enum: ["GEN_ASSIST", "SMART_REPLY", "SUGGESTIONS", "SUMMARIZATION"]
+            enum: ["GEN_ASSIST", "SMART_REPLY", "SUGGESTIONS", "SUMMARIZATION", "TRANSCRIPT"]
         },
     },
     required: ['tab'],
@@ -74,5 +74,6 @@ export const navigateToSchema = {
 export const topicTypes = [
     'analyze-content-response-received',
     'conversation-details-received',
-    'list-messages-response-received'
+    'list-messages-response-received',
+    'smart-reply-selected'
 ]

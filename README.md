@@ -272,7 +272,7 @@ addListener(topic: string, callback: function(data)): void
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'conversation-details-received', 'list-messages-response-received'' |
+| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'conversation-details-received', 'list-messages-response-received', 'smart-reply-selected' |
 | callback | function | Yes | - |  The function to return when a new event occurs. All events return a single parameter (data). |
 
 <!-- Event Reference -->
@@ -285,6 +285,8 @@ addListener(topic: string, callback: function(data)): void
     <li><a href="#analyze-content-response-received">analyze-content-response-received</a></li>
     <li><a href="#conversation-details-received">conversation-details-received</a></li>
     <li><a href="#list-messages-response-received">list-messages-response-received</a></li>
+    <li><a href="#smart-reply-selected">smart-reply-selected</a></li>
+    
 </ul>
 
 #### Analyze Content Response Received
@@ -310,6 +312,14 @@ Dispatched when a list messages response is received.
 **Payload**
 
 See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#ListMessagesResponseReceivedPayload">ListMessagesResponseReceivedPayload</a>
+
+#### Smart Reply Selected
+
+Dispatched when a list messages response is received.
+
+**Payload**
+
+See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#SmartReplySelection">SmartReplySelection</a>
 
 <!-- ROADMAP -->
 
