@@ -110,22 +110,49 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 interface InitializeConfig {
     conversationProfile: string;
     connectorUrl: string;
-    channel: enum; // 
-    conversationId?: string // The unique conversation identifier
-    features: string[] // 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'. Tab order is based on the order of the features you provide
-    iframeUrl?: string // If your iframeUrl is different from your connectorUrl, provide this
+    channel: enum;
+    conversationId?: string 
+    features: array
+    iframeUrl?: string
 }
 ```
 
-***conversationProfile***: Google CCAI conversation profile
+***conversationProfile***
 
-<mark style="background-color: lightblue">Required</mark> conversationProfile: string
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | Google CCAI conversation profile |
 
-***connectorUrl***: Google Cloud connector URL 
-***channel***: Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'
-***conversationId***: Unique conversation identifier
-***features***: Google Cloud connector URL 
-***iframeUrl***: Google Cloud connector URL 
+***connectorUrl***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | Google Cloud connector URL |
+
+***channel***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| enum | true | - | Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'. When no conversation exists, use 'chat'. |
+
+***conversationId***: 
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | Unique conversation identifier |
+
+***features***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| array | true | - | One or more pages to display. ['GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY']. Tab order is based on the order of the features you provide |
+
+***iframeUrl***
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | If your iframeUrl is different from your connectorUrl, provide this |
+
 
 
 
