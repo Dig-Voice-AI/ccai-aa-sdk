@@ -20,6 +20,7 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#getting-started">Getting Started</a></li>
         <li><a href="#api-reference">API Reference</a></li>
+        <li><a href="#event-reference">Event Reference</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#license">License</a></li>
@@ -265,14 +266,50 @@ Adds a new listener for your application to receive events about a certain topic
 
 <h5>Method</h5>
 
-addListener(topic: string, callback: function): void
+addListener(topic: string, callback: function(data)): void
 
 <h5>Parameters</h5>
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'conversation-details-received', 'list-messages-response-received'' |
-| callback | function | Yes | - |  The function to return when a new event occurs. |
+| callback | function | Yes | - |  The function to return when a new event occurs. All events return a single parameter (data). |
+
+<!-- Event Reference -->
+
+## Event Reference
+
+### Event Topics
+
+<ul>
+    <li><a href="#analyze-content-response-received">analyze-content-response-received</a></li>
+    <li><a href="#conversation-details-received">conversation-details-received</a></li>
+    <li><a href="#list-messages-response-received">list-messages-response-received</a></li>
+</ul>
+
+#### Analyze Content Response Received
+
+Dispatched when a new AnalyzeContentResponse has been received.
+
+**Payload**
+
+See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#AnalyzeContentResponseReceivedPayload">AnalyzeContentResponseReceivedPayload</a>
+
+#### Conversation Details Received
+
+Dispatched when conversation details are received from the SDK (including agent and customer info).
+
+**Payload**
+
+See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#ConversationDetailsReceivedPayload">ConversationDetailsReceivedPayload</a>
+
+#### List Messages Response Received
+
+Dispatched when a list messages response is received.
+
+**Payload**
+
+See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#ListMessagesResponseReceivedPayload">ListMessagesResponseReceivedPayload</a>
 
 <!-- ROADMAP -->
 
@@ -294,7 +331,7 @@ Nathan Galloway - nathan.galloway@ttecdigital.com
 
 Project Link: [https://github.com/Dig-Voice-AI/ccai-aa-sdk](https://github.com/Dig-Voice-AI/ccai-aa-sdk)
 
-<!-- ROADMAP -->
+<!-- License -->
 
 ## License
 

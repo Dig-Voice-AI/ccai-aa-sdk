@@ -3,7 +3,7 @@ import { analyzeContentDataSchema, initializeDataSchema, navigateToSchema, topic
 
 export default class AgentAssistSdk {
     constructor() {
-        window.addEventListener('message', this.handleNewMessageFromListener, false)
+        window.addEventListener('message', (event) => this.handleNewMessageFromListener(event), false)
 
         this.ajv = new Ajv()
         
@@ -47,7 +47,7 @@ export default class AgentAssistSdk {
     
         console.log('Parent received message =', event.data)
     
-        listeners.forEach((listener) => {
+        this.listeners.forEach((listener) => {
             if (listener.topic !== event.data.topic) return
     
             listener.callback(event.data.data)
