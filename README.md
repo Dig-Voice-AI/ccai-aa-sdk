@@ -51,7 +51,9 @@ yarn add @ttec-digital/ccai-aa-sdk
 
 ## Getting Started
 
-The following is an example to get you going quickly.
+The following is an example to get you going quickly. In general add the listeners you want to use, then call initialize. When you receive the 'connector-initialized' event, it is you may begin using other API's. 
+
+As an example, you may need to consider what happens if chat messages are created before the connector is initialized. For this, you may consider storing them in a pending messages array and then pushing them one by one when you receive the 'connector-initialized' event.
 
 ```html
 <div id="sdk-container">
@@ -60,9 +62,38 @@ The following is an example to get you going quickly.
 <script type="text/javascript">
 import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk' 
 
-async function initalizeSDK() {
-    const hostElement = document.getElementById("sdk-container")
+constant pendingContent = []
 
+const connectorIntialized = false
+
+const agentAssistSdk = new AgentAssistSdk()
+
+agentAssistSdk.addListener('connector-initialized', (data) => {
+    connectorIntialized = data.success
+
+    pendingContent.forEach((content) => { 
+        agentAssistSdk.analyzeContent(content)
+    })
+})
+/**
+ * // Your function that listens for messages from your chat. Note, we're not showing how to determine
+ * 'participantRole' or 'text' from your chat function below. That will be based on your own system.
+ * 
+ *  function onMessageFromChat(data) {
+ *      const content = { participantRole: 'HUMAN_AGENT',
+ *          request: {
+ *              textInput: {
+ *                  text: 'Hi, customer. How can I help you today?'
+ *              },
+ *              messageSendTime: new Date().toISOString()
+ *          } 
+ *      }
+ *      if (connectorInitialized) agentAssistSdk.analyzeContent(content)
+ *      else pendingContent.push(content)  
+ *  }
+ */
+
+async function initalizeSDK() {
     try {
         await agentAssistSdk.initialize(hostElement, {
             conversationProfile: 'projects/<< project name >>/locations/<< project location name >>/conversationProfiles/<< conversation profile id >>',
@@ -94,7 +125,7 @@ async function initalizeSDK() {
 
 #### Initialize
 
-Initializes the SDK in the provided element and sets the config to be used. Always call this method before calling other methods.
+Initializes the SDK in the provided element and sets the config to be used.
 
 <h5>Method</h5>
 
@@ -272,7 +303,7 @@ addListener(topic: string, callback: function(data)): void
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'conversation-details-received', 'list-messages-response-received', 'smart-reply-selected' |
+| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'connector-initialized', 'conversation-details-received', 'list-messages-response-received', 'smart-reply-selected' |
 | callback | function | Yes | - |  The function to return when a new event occurs. All events return a single parameter (data). |
 
 <!-- Event Reference -->
@@ -283,6 +314,7 @@ addListener(topic: string, callback: function(data)): void
 
 <ul>
     <li><a href="#analyze-content-response-received">analyze-content-response-received</a></li>
+    <li><a href="#connector-initialized">connector-initialized</a></li>
     <li><a href="#conversation-details-received">conversation-details-received</a></li>
     <li><a href="#list-messages-response-received">list-messages-response-received</a></li>
     <li><a href="#smart-reply-selected">smart-reply-selected</a></li>
@@ -296,6 +328,22 @@ Dispatched when a new AnalyzeContentResponse has been received.
 **Payload**
 
 See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-documentation#AnalyzeContentResponseReceivedPayload">AnalyzeContentResponseReceivedPayload</a>
+
+#### Connector Initialized
+
+Dispatched when the connector has either established an API-based connection (for chats) or event-based connection (for voice). This is the ready event that signals you are good to begin using other API's.
+
+**Payload**
+
+ConnectorInitializedPayload
+
+**ConnectorInitializedPayload**
+
+```javascript
+interface ConnectorInitializedPayload {
+    success: boolean;
+}
+```
 
 #### Conversation Details Received
 

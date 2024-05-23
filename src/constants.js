@@ -29,6 +29,10 @@ export const analyzeContentDataSchema = {
     additionalProperties: false
 }
 
+export const errorMessages = {
+    UNINITIALIZED: { message: "Connector is not initialized.", errors: "Please wait for the connector to initialize before making this request." }
+}
+
 export const initializeDataSchema = {
     type: 'object',
     properties: {
@@ -73,6 +77,7 @@ export const navigateToSchema = {
 
 export const topicTypes = [
     'analyze-content-response-received',
+    'connector-initialized',
     'conversation-details-received',
     'list-messages-response-received',
     'smart-reply-selected'

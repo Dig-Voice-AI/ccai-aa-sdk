@@ -1,5 +1,5 @@
 import Ajv from 'ajv'
-import { analyzeContentDataSchema, initializeDataSchema, navigateToSchema, topicTypes } from '@/constants'
+import { analyzeContentDataSchema, initializeDataSchema, errorMessages, navigateToSchema, topicTypes } from '@/constants'
 
 export default class AgentAssistSdk {
     constructor() {
@@ -32,6 +32,8 @@ export default class AgentAssistSdk {
     }
 
     analyzeContent(data) {
+        if (!this.initialized) throw(errorMessages.UNINITIALIZED) 
+
         const validate = this.ajv.compile(analyzeContentDataSchema)
 
         const valid = validate(data)
@@ -46,10 +48,12 @@ export default class AgentAssistSdk {
         if (event.data.id !== this.id) return
     
         console.log('Parent received message =', event.data)
+
+        if (event.data.topic === 'connector-initialized') this.initialized = true
     
         this.listeners.forEach((listener) => {
             if (listener.topic !== event.data.topic) return
-    
+
             listener.callback(event.data.data)
         })
     }
@@ -69,8 +73,6 @@ export default class AgentAssistSdk {
             this.iframe.onload = () => {
                 this.iframe.contentWindow.postMessage({...data, id: this.id, topic: 'INIT'}, "*")
 
-                this.initialized = true
-
                 return resolve() 
             }
 
@@ -81,6 +83,8 @@ export default class AgentAssistSdk {
     }
 
     navigateTo(data) {
+        if (!this.initialized) throw(errorMessages.UNINITIALIZED) 
+
         const validate = this.ajv.compile(navigateToSchema)
 
         const valid = validate(data)
