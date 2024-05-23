@@ -52,14 +52,29 @@ yarn add @ttec-digital/ccai-aa-sdk
 ### SDK Methods
 
 <ul>
-    <li><a href="#sdk-method-initialize">initialize()</a></li>
+    <li><a href="#initialize">initialize()</a></li>
+    <li><a href="#navigate-to">navigateTo()</a></li>
 </ul>
 
-<!-- SDK Method Initialize -->
+<!-- Initialize -->
 
 #### Initialize
 
-test
+initialize(element: HTMLElement, config: InitializeConfig): Promise
+
+<h5>Parameters</h5>
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
+| config | InitializeConfig | Yes | - | Config for the SDK |
+
+
+<!-- Navigate To -->
+
+#### Navigate To
+
+navigateTo()
 
 <!-- ROADMAP -->
 
