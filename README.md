@@ -337,6 +337,8 @@ Dispatched when the connector has either established an API-based connection (fo
 
 ConnectorInitializedPayload
 
+<h5>Interfaces</h5>
+
 **ConnectorInitializedPayload**
 
 ```javascript
