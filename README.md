@@ -315,7 +315,7 @@ See <a href="https://cloud.google.com/agent-assist/docs/ui-modules-events-docume
 
 #### Smart Reply Selected
 
-Dispatched when a list messages response is received.
+Dispatched when a Smart Reply chip is selected.
 
 **Payload**
 
