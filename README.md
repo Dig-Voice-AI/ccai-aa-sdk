@@ -104,7 +104,7 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 
 <h5>Interfaces</h5>
 
-*InitializeConfig*
+**InitializeConfig**
 
 ```javascript
 interface InitializeConfig {
