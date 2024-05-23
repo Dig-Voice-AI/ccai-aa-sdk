@@ -108,16 +108,24 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 
 ```javascript
 interface InitializeConfig {
-    conversationProfile: string; // Google CCAI conversation profile
-    connectorUrl: string; // Google Cloud connector URL 
-    channel: enum; // 'chat', 'voice', 'omnichannel'
+    conversationProfile: string;
+    connectorUrl: string;
+    channel: enum; // 
     conversationId?: string // The unique conversation identifier
     features: string[] // 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'. Tab order is based on the order of the features you provide
     iframeUrl?: string // If your iframeUrl is different from your connectorUrl, provide this
 }
 ```
 
-***conversationProfile***
+***conversationProfile***: Google CCAI conversation profile
+
+<mark>Required</mark> conversationProfile: string
+***connectorUrl***: Google Cloud connector URL 
+***channel***: Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'
+***conversationId***: Unique conversation identifier
+***features***: Google Cloud connector URL 
+***iframeUrl***: Google Cloud connector URL 
+
 
 
 <!-- Navigate To -->
