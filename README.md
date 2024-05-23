@@ -95,21 +95,21 @@ Initializes the SDK in the provided element and sets the config to be used. Alwa
 
 <h5>Method</h5>
 
-initialize(element: HTMLElement, config: InitializeConfig): Promise
+initialize(element: HTMLElement, data: InitializeData): Promise
 
 <h5>Parameters</h5>
 
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
-| config | InitializeConfig | Yes | - | Config for the SDK |
+| config | InitializeData | Yes | - | Config for the SDK |
 
 <h5>Interfaces</h5>
 
-**InitializeConfig**
+**InitializeData**
 
 ```javascript
-interface InitializeConfig {
+interface InitializeData {
     conversationProfile: string;
     connectorUrl: string;
     channel: enum;
@@ -155,14 +155,29 @@ interface InitializeConfig {
 | --- | --- | --- | --- |
 | string | true | - | If your iframeUrl is different from your connectorUrl, provide this |
 
-
-
-
 <!-- Navigate To -->
 
 #### Navigate To
 
-navigateTo()
+Changes the active page.
+
+<h5>Method</h5>
+
+navigateTo(data: NavigateToData): Promise
+
+<h5>Interfaces</h5>
+
+**NavigateToData**
+
+```javascript
+interface NavigateToData {
+    tab: string;
+}
+```
+
+| Type | Required | Default | Description |
+| --- | --- | --- | --- |
+| string | true | - | The page to change to. Valid Values: 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'
 
 <!-- ROADMAP -->
 
