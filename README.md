@@ -60,6 +60,8 @@ yarn add @ttec-digital/ccai-aa-sdk
 
 #### Initialize
 
+<h5>Method</h5>
+
 initialize(element: HTMLElement, config: InitializeConfig): Promise
 
 <h5>Parameters</h5>
@@ -69,6 +71,18 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 | element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
 | config | InitializeConfig | Yes | - | Config for the SDK |
 
+<h5>InitializeConfig</h5>
+
+```json
+interface InitializeConfig {
+    conversationProfile: string; // Google CCAI conversation profile
+    connectorUrl: string; // Google Cloud connector URL 
+    channel: enum; // 'chat', 'voice', 'omnichannel'
+    conversationId?: string // The unique conversation identifier
+    features: featureItems //
+    iframeUrl?: string // If your iframeUrl is different from your connectorUrl, provide this
+}
+```
 
 <!-- Navigate To -->
 
