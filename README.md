@@ -115,10 +115,10 @@ interface InitializeConfig {
     features: string[] // 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'. Tab order is based on the order of the features you provide
     iframeUrl?: string // If your iframeUrl is different from your connectorUrl, provide this
 }
+```
 
 ***conversationProfile***
 
-```
 
 <!-- Navigate To -->
 
