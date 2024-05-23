@@ -67,7 +67,6 @@ async function initalizeSDK() {
             conversationProfile: 'projects/<< project name >>/locations/<< project location name >>/conversationProfiles/<< conversation profile id >>',
             connectorUrl: '<< cloud run ui connector url >>',
             channel: 'chat',
-            conversationId: 'CDFED72D0170911EF9F82F86E7BB39694',
             features: ['GEN_ASSIST', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT'],
         })  
     } catch(e) {
@@ -103,7 +102,9 @@ initialize(element: HTMLElement, config: InitializeConfig): Promise
 | element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
 | config | InitializeConfig | Yes | - | Config for the SDK |
 
-<h5>InitializeConfig</h5>
+<h5>Interfaces</h5>
+
+*InitializeConfig*
 
 ```javascript
 interface InitializeConfig {
