@@ -49,6 +49,18 @@ yarn add @ttec-digital/ccai-aa-sdk
 
 ## API Reference
 
+### SDK Methods
+
+<ul>
+    <li><a href="#sdk-method-initialize">initialize()</a></li>
+</ul>
+
+<!-- SDK Method Initialize -->
+
+#### Initialize
+
+test
+
 <!-- ROADMAP -->
 
 ## Roadmap
