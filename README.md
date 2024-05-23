@@ -119,7 +119,7 @@ interface InitializeConfig {
 
 ***conversationProfile***: Google CCAI conversation profile
 
-<mark>Required</mark> conversationProfile: string
+<span style="background-color: #FFFF00">Required</span> conversationProfile: string
 ***connectorUrl***: Google Cloud connector URL 
 ***channel***: Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'
 ***conversationId***: Unique conversation identifier
