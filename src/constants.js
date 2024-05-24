@@ -19,7 +19,7 @@ export const analyzeContentDataSchema = {
                 },
                 messageSendTime: {
                     type: 'string'
-                }
+                },
             },
             required: ['textInput', 'messageSendTime'],
             additionalProperties: false
@@ -72,6 +72,17 @@ export const navigateToSchema = {
         },
     },
     required: ['tab'],
+    additionalProperties: false
+}
+
+export const searchAiSchema = {
+    type: 'object',
+    properties: {
+        text: {
+            type: 'string'
+        },
+    },
+    required: ['text'],
     additionalProperties: false
 }
 
