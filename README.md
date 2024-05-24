@@ -62,6 +62,8 @@ As an example, you may need to consider what happens if chat messages are create
 <script type="text/javascript">
 import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk' 
 
+const hostElement = document.getElementById('sdk-container')
+
 const pendingContent = []
 
 const connectorIntialized = false
@@ -75,6 +77,9 @@ agentAssistSdk.addListener('connector-initialized', (data) => {
         agentAssistSdk.analyzeContent(content)
     })
 })
+
+initializeSdk() 
+
 /**
  * // Your function that listens for messages from your chat. Note, we're not showing how to determine
  * 'participantRole' or 'text' from your chat function below. That will be based on your own system.
@@ -101,7 +106,7 @@ async function initalizeSDK() {
             channel: 'chat',
             features: ['GEN_ASSIST', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT'],
         })  
-    } catch(e) {
+    } catch (e) {
         console.error(e)
     }
 }
