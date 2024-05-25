@@ -51,65 +51,65 @@ yarn add @ttec-digital/ccai-aa-sdk
 
 ## Getting Started
 
-The following is an example to get you going quickly. In general add the listeners you want to use, then call initialize. When you receive the 'connector-initialized' event, it is you may begin using other API's. 
+The following is an example to get you going quickly. In general add the listeners you want to use, then call initialize. When you receive the 'connector-initialized' event, you may begin using other API's.
 
 As an example, you may need to consider what happens if chat messages are created before the connector is initialized. For this, you may consider storing them in a pending messages array and then pushing them one by one when you receive the 'connector-initialized' event.
 
 ```html
-<div id="sdk-container">
-</div>
+<div id="sdk-container"></div>
 
 <script type="text/javascript">
-import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk' 
+    import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk'
 
-const hostElement = document.getElementById('sdk-container')
+    const hostElement = document.getElementById('sdk-container')
 
-const pendingContent = []
+    const pendingContent = []
 
-const connectorIntialized = false
+    const connectorIntialized = false
 
-const agentAssistSdk = new AgentAssistSdk()
+    const agentAssistSdk = new AgentAssistSdk()
 
-agentAssistSdk.addListener('connector-initialized', (data) => {
-    connectorIntialized = data.success
+    agentAssistSdk.addListener('connector-initialized', (data) => {
+        connectorIntialized = data.success
 
-    pendingContent.forEach((content) => { 
-        agentAssistSdk.analyzeContent(content)
+        pendingContent.forEach((content) => {
+            agentAssistSdk.analyzeContent(content)
+        })
     })
-})
 
-initializeSdk() 
+    initializeSdk()
 
-/**
- * // Your function that listens for messages from your chat. Note, we're not showing how to determine
- * 'participantRole' or 'text' from your chat function below. That will be based on your own system.
- * 
- *  function onMessageFromChat(data) {
- *      const content = { participantRole: 'HUMAN_AGENT',
- *          request: {
- *              textInput: {
- *                  text: 'Hi, customer. How can I help you today?'
- *              },
- *              messageSendTime: new Date().toISOString()
- *          } 
- *      }
- *      if (connectorInitialized) agentAssistSdk.analyzeContent(content)
- *      else pendingContent.push(content)  
- *  }
- */
+    /**
+     * // Your function that listens for messages from your chat. Note, we're not showing how to determine
+     * 'participantRole' or 'text' from your chat function below. That will be based on your own system.
+     *
+     *  function onMessageFromChat(data) {
+     *      const content = { participantRole: 'HUMAN_AGENT',
+     *          request: {
+     *              textInput: {
+     *                  text: 'Hi, customer. How can I help you today?'
+     *              },
+     *              messageSendTime: new Date().toISOString()
+     *          }
+     *      }
+     *      if (connectorInitialized) agentAssistSdk.analyzeContent(content)
+     *      else pendingContent.push(content)
+     *  }
+     */
 
-async function initalizeSDK() {
-    try {
-        await agentAssistSdk.initialize(hostElement, {
-            conversationProfile: 'projects/<< project name >>/locations/<< project location name >>/conversationProfiles/<< conversation profile id >>',
-            connectorUrl: '<< cloud run ui connector url >>',
-            channel: 'chat',
-            features: ['GEN_ASSIST', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT'],
-        })  
-    } catch (e) {
-        console.error(e)
+    async function initalizeSDK() {
+        try {
+            await agentAssistSdk.initialize(hostElement, {
+                conversationProfile:
+                    'projects/<< project name >>/locations/<< project location name >>/conversationProfiles/<< conversation profile id >>',
+                connectorUrl: '<< cloud run ui connector url >>',
+                channel: 'chat',
+                features: ['GEN_ASSIST', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT']
+            })
+        } catch (e) {
+            console.error(e)
+        }
     }
-}
 </script>
 ```
 
@@ -138,10 +138,10 @@ initialize(element: HTMLElement, data: InitializeData): Promise
 
 <h5>Parameters</h5>
 
-| Name | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| element | HTMLElement | Yes | - | The element on your DOM that the SDK Iframe will be appended to |
-| data | InitializeData | Yes | - | Config for the SDK |
+| Name    | Type           | Required | Default | Description                                                     |
+| ------- | -------------- | -------- | ------- | --------------------------------------------------------------- |
+| element | HTMLElement    | Yes      | -       | The element on your DOM that the SDK Iframe will be appended to |
+| data    | InitializeData | Yes      | -       | Config for the SDK                                              |
 
 <h5>Interfaces</h5>
 
@@ -152,47 +152,47 @@ interface InitializeData {
     conversationProfile: string;
     connectorUrl: string;
     channel: string;
-    conversationId?: string 
+    conversationId?: string
     features: array
     iframeUrl?: string
 }
 ```
 
-***conversationProfile***
+**_conversationProfile_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | Google CCAI conversation profile |
+| Type   | Required | Default | Description                      |
+| ------ | -------- | ------- | -------------------------------- |
+| string | true     | -       | Google CCAI conversation profile |
 
-***connectorUrl***
+**_connectorUrl_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | Google Cloud connector URL |
+| Type   | Required | Default | Description                |
+| ------ | -------- | ------- | -------------------------- |
+| string | true     | -       | Google Cloud connector URL |
 
-***channel***
+**_channel_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'. When no conversation exists, use 'chat'. |
+| Type   | Required | Default | Description                                                                                                         |
+| ------ | -------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| string | true     | -       | Channel of the conversation. Valid Values: 'chat', 'voice', 'omnichannel'. When no conversation exists, use 'chat'. |
 
-***conversationId***: 
+**_conversationId_**:
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | Unique conversation identifier |
+| Type   | Required | Default | Description                    |
+| ------ | -------- | ------- | ------------------------------ |
+| string | true     | -       | Unique conversation identifier |
 
-***features***
+**_features_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| array | true | - | One or more pages to display. ['GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY']. Tab order is based on the order of the features you provide |
+| Type  | Required | Default | Description                                                                                                                                                            |
+| ----- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| array | true     | -       | One or more pages to display. ['GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY']. Tab order is based on the order of the features you provide |
 
-***iframeUrl***
+**_iframeUrl_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | If your iframeUrl is different from your connectorUrl, provide this |
+| Type   | Required | Default | Description                                                         |
+| ------ | -------- | ------- | ------------------------------------------------------------------- |
+| string | true     | -       | If your iframeUrl is different from your connectorUrl, provide this |
 
 <!-- Navigate To -->
 
@@ -206,9 +206,9 @@ navigateTo(data: NavigateToData): void
 
 <h5>Parameters</h5>
 
-| Name | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| data | NavigateToData | Yes | - |  - |
+| Name | Type           | Required | Default | Description |
+| ---- | -------------- | -------- | ------- | ----------- |
+| data | NavigateToData | Yes      | -       | -           |
 
 <h5>Interfaces</h5>
 
@@ -220,11 +220,11 @@ interface NavigateToData {
 }
 ```
 
-***tab***
+**_tab_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | The page to change to. Valid Values: 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY'
+| Type   | Required | Default | Description                                                                                                    |
+| ------ | -------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| string | true     | -       | The page to change to. Valid Values: 'GEN_ASSIST', 'SUMMARIZATION', 'TRANSCRIPT', 'SUGGESTIONS', 'SMART_REPLY' |
 
 <!-- Analyze Content -->
 
@@ -238,9 +238,9 @@ analyzeContent(data: AnalyzeContentData): void
 
 <h5>Parameters</h5>
 
-| Name | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| data | AnalyzeContentData | Yes | - |  - |
+| Name | Type               | Required | Default | Description |
+| ---- | ------------------ | -------- | ------- | ----------- |
+| data | AnalyzeContentData | Yes      | -       | -           |
 
 <h5>Interfaces</h5>
 
@@ -253,17 +253,17 @@ interface AnalyzeContentData {
 }
 ```
 
-***participantRole***
+**_participantRole_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | The participant role. Valid Values: 'END_USER', 'HUMAN_AGENT', 'AUTOMATED_AGENT'
+| Type   | Required | Default | Description                                                                      |
+| ------ | -------- | ------- | -------------------------------------------------------------------------------- |
+| string | true     | -       | The participant role. Valid Values: 'END_USER', 'HUMAN_AGENT', 'AUTOMATED_AGENT' |
 
-***request***
+**_request_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| object | true | - | See AnalyzeContentRequest.
+| Type   | Required | Default | Description                |
+| ------ | -------- | ------- | -------------------------- |
+| object | true     | -       | See AnalyzeContentRequest. |
 
 **AnalyzeContentRequest**
 
@@ -274,11 +274,11 @@ interface AnalyzeContentRequest {
 }
 ```
 
-***messageSendTime***
+**_messageSendTime_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | The message timestamp. Example: messageSendTime: new Date().toISOString()
+| Type   | Required | Default | Description                                                               |
+| ------ | -------- | ------- | ------------------------------------------------------------------------- |
+| string | true     | -       | The message timestamp. Example: messageSendTime: new Date().toISOString() |
 
 **TextInput**
 
@@ -288,11 +288,11 @@ interface TextInput {
 }
 ```
 
-***text***
+**_text_**
 
-| Type | Required | Default | Description |
-| --- | --- | --- | --- |
-| string | true | - | The UTF-8 encoded natural language text to be processed. Text length must not exceed 256 characters for virtual agent interactions.
+| Type   | Required | Default | Description                                                                                                                         |
+| ------ | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| string | true     | -       | The UTF-8 encoded natural language text to be processed. Text length must not exceed 256 characters for virtual agent interactions. |
 
 <!-- Add Listener -->
 
@@ -306,10 +306,10 @@ addListener(topic: string, callback: function(data)): void
 
 <h5>Parameters</h5>
 
-| Name | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| topic | string | Yes | - |  The topic to get events from. Valid values: 'analyze-content-response-received', 'connector-initialized', 'conversation-details-received', 'list-messages-response-received', 'smart-reply-selected' |
-| callback | function | Yes | - |  The function to return when a new event occurs. All events return a single parameter (data). |
+| Name     | Type     | Required | Default | Description                                                                                                                                                                                          |
+| -------- | -------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| topic    | string   | Yes      | -       | The topic to get events from. Valid values: 'analyze-content-response-received', 'connector-initialized', 'conversation-details-received', 'list-messages-response-received', 'smart-reply-selected' |
+| callback | function | Yes      | -       | The function to return when a new event occurs. All events return a single parameter (data).                                                                                                         |
 
 <!-- Event Reference -->
 
