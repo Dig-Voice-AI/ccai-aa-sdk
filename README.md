@@ -61,11 +61,11 @@ As an example, you may need to consider what happens if chat messages are create
 <script type="text/javascript">
     import AgentAssistSdk from '@ttec-digital/ccai-aa-sdk'
 
+    let connectorIntialized = false
+
     const hostElement = document.getElementById('sdk-container')
 
     const pendingContent = []
-
-    const connectorIntialized = false
 
     const agentAssistSdk = new AgentAssistSdk()
 

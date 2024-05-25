@@ -51,6 +51,42 @@ export const initializeDataSchema = {
         channel: {
             enum: ['chat', 'omnichannel', 'voice']
         },
+        auth: {
+            type: 'object',
+            properties: {
+                skip: {
+                    type: 'boolean'
+                },
+                cisco: {
+                    type: 'object',
+                    properties: {
+                        token: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['token'],
+                    additionalProperties: false
+                },
+                genesys: {
+                    type: 'object',
+                    properties: {
+                        token: {
+                            type: 'string'
+                        }
+                    },
+                    required: ['token'],
+                    additionalProperties: false
+                }
+            },
+            additionalProperties: false,
+            oneOf: [{
+                required: ['skip']
+            }, {
+                required: ['cisco']
+            }, {
+                required: ['genesys']
+            }]
+        },
         features: {
             type: 'array',
             minItems: 1,
@@ -63,7 +99,7 @@ export const initializeDataSchema = {
             type: 'string'
         }
     },
-    required: ['connectorUrl', 'conversationProfile', 'channel', 'features'],
+    required: ['connectorUrl', 'conversationProfile', 'channel', 'features', 'auth'],
     additionalProperties: false
 }
 
