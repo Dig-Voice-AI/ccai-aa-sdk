@@ -18,6 +18,6 @@ export default class Host {
     }
 
     sendMessage(data) {
-        this.iframe.contentWindow.postMessage(data, "*")
+        this.iframe.contentWindow.postMessage(data, '*')
     }
 }

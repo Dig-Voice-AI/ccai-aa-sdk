@@ -4,7 +4,7 @@ export default class Listener {
     }
 
     create(topic, callback) {
-        this.listeners.push({topic: topic, callback: callback})
+        this.listeners.push({ topic: topic, callback: callback })
     }
 
     onMessage(topic, data) {

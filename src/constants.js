@@ -2,7 +2,7 @@ export const analyzeContentDataSchema = {
     type: 'object',
     properties: {
         participantRole: {
-            enum: ["END_USER", "AUTOMATED_AGENT", "HUMAN_AGENT"]
+            enum: ['END_USER', 'AUTOMATED_AGENT', 'HUMAN_AGENT']
         },
         request: {
             type: 'object',
@@ -19,7 +19,7 @@ export const analyzeContentDataSchema = {
                 },
                 messageSendTime: {
                     type: 'string'
-                },
+                }
             },
             required: ['textInput', 'messageSendTime'],
             additionalProperties: false
@@ -30,34 +30,37 @@ export const analyzeContentDataSchema = {
 }
 
 export const errorMessages = {
-    UNINITIALIZED: { message: "Connector is not initialized.", errors: "Please wait for the connector to initialize before making this request." }
+    UNINITIALIZED: {
+        message: 'Connector is not initialized.',
+        errors: 'Please wait for the connector to initialize before making this request.'
+    }
 }
 
 export const initializeDataSchema = {
     type: 'object',
     properties: {
         connectorUrl: {
-            type: 'string',
+            type: 'string'
         },
         conversationId: {
-            type: 'string',
+            type: 'string'
         },
         conversationProfile: {
-            type: 'string',
+            type: 'string'
         },
         channel: {
-            enum: ["chat", "omnichannel", "voice"]
+            enum: ['chat', 'omnichannel', 'voice']
         },
         features: {
-            type: "array",
+            type: 'array',
             minItems: 1,
             uniqueItems: true,
             items: {
-                enum: ["GEN_ASSIST", "SUGGESTIONS", "SMART_REPLY", "SUMMARIZATION", "TRANSCRIPT"]
+                enum: ['GEN_ASSIST', 'SUGGESTIONS', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT']
             }
         },
         iframeUrl: {
-            type: 'string',
+            type: 'string'
         }
     },
     required: ['connectorUrl', 'conversationProfile', 'channel', 'features'],
@@ -68,8 +71,8 @@ export const navigateToSchema = {
     type: 'object',
     properties: {
         tab: {
-            enum: ["GEN_ASSIST", "SMART_REPLY", "SUGGESTIONS", "SUMMARIZATION", "TRANSCRIPT"]
-        },
+            enum: ['GEN_ASSIST', 'SMART_REPLY', 'SUGGESTIONS', 'SUMMARIZATION', 'TRANSCRIPT']
+        }
     },
     required: ['tab'],
     additionalProperties: false
@@ -80,7 +83,7 @@ export const searchAiSchema = {
     properties: {
         text: {
             type: 'string'
-        },
+        }
     },
     required: ['text'],
     additionalProperties: false

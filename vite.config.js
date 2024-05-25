@@ -1,4 +1,7 @@
-import { resolve } from 'path'
+import {
+    resolve
+} from 'path'
+import eslint from 'vite-plugin-eslint'
 
 export default {
     build: {
@@ -19,6 +22,7 @@ export default {
             external: [],
         }
     },
+    plugins: [eslint()],
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src')
