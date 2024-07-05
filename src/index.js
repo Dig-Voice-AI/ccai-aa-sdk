@@ -1,10 +1,12 @@
 import Ajv from 'ajv'
 import {
+    activateConversationDataSchema,
     analyzeContentDataSchema,
+    endConversationDataSchema,
     initializeDataSchema,
     errorMessages,
     navigateToSchema,
-    searchAiSchema,
+    startConversationDataSchema,
     topicTypes
 } from '@/constants'
 import Listener from '@/classes/Listener'
@@ -20,19 +22,23 @@ export default class AgentAssistSdk {
 
         this.initialized = false
 
-        this.id = crypto.randomUUID()
+        this.parentId = crypto.randomUUID()
 
         window.addEventListener(
             'message',
             (event) => {
-                if (event.data.id !== this.id) return
+                if (event.data.parentId !== this.parentId) return
 
                 console.log(
                     `SDK received message for topic = ${event.data.topic}. Data =`,
                     event.data.data
                 )
 
-                if (event.data.topic === 'connector-initialized') this.initialized = true
+                if (event.data.topic === 'connector-initialization-response-received') {
+                    if (!event.data.data.success) return
+
+                    this.initialized = true
+                }
 
                 this.listener.onMessage(event.data.topic, event.data.data)
             },
@@ -58,6 +64,26 @@ export default class AgentAssistSdk {
         this.listener.create(topic, callback)
     }
 
+    activateConversation(data) {
+        if (!this.initialized) throw errorMessages.UNINITIALIZED
+
+        const validate = this.ajv.compile(activateConversationDataSchema)
+
+        const valid = validate(data)
+
+        if (!valid)
+            throw {
+                message: "Property 'data' is invalid",
+                errors: validate.errors
+            }
+
+        this.host.sendMessage({
+            ...data,
+            parentId: this.parentId,
+            topic: 'ACTIVATE_CONVERSATION'
+        })
+    }
+
     analyzeContent(data) {
         if (!this.initialized) throw errorMessages.UNINITIALIZED
 
@@ -73,8 +99,28 @@ export default class AgentAssistSdk {
 
         this.host.sendMessage({
             ...data,
-            id: this.id,
+            parentId: this.parentId,
             topic: 'ANALYZE_CONTENT'
+        })
+    }
+
+    endConversation(data) {
+        if (!this.initialized) throw errorMessages.UNINITIALIZED
+
+        const validate = this.ajv.compile(endConversationDataSchema)
+
+        const valid = validate(data)
+
+        if (!valid)
+            throw {
+                message: "Property 'data' is invalid",
+                errors: validate.errors
+            }
+
+        this.host.sendMessage({
+            ...data,
+            parentId: this.parentId,
+            topic: 'END_CONVERSATION'
         })
     }
 
@@ -98,15 +144,21 @@ export default class AgentAssistSdk {
                     errors: validate.errors
                 })
 
-            return this.host.loadIframe(el, data.iframeUrl || data.connectorUrl, () => {
-                this.host.sendMessage({
-                    ...data,
-                    id: this.id,
-                    topic: 'INIT'
-                })
+            if (data.timeout) {
+                setTimeout(() => {
+                    if (this.initialized) return
 
-                return resolve()
-            })
+                    this.listener.onMessage('connector-initialization-response-received', {
+                        success: false
+                    })
+                }, data.timeout)
+            }
+
+            const url = this.host.constructIframeUrl(this.parentId, data)
+
+            this.host.loadIframe(el, url)
+
+            return resolve()
         })
     }
 
@@ -125,15 +177,15 @@ export default class AgentAssistSdk {
 
         this.host.sendMessage({
             ...data,
-            id: this.id,
+            parentId: this.parentId,
             topic: 'NAVIGATE'
         })
     }
 
-    searchAi(data) {
+    startConversation(data) {
         if (!this.initialized) throw errorMessages.UNINITIALIZED
 
-        const validate = this.ajv.compile(searchAiSchema)
+        const validate = this.ajv.compile(startConversationDataSchema)
 
         const valid = validate(data)
 
@@ -145,8 +197,8 @@ export default class AgentAssistSdk {
 
         this.host.sendMessage({
             ...data,
-            id: this.id,
-            topic: 'SEARCH_AI'
+            parentId: this.parentId,
+            topic: 'START_CONVERSATION'
         })
     }
 }

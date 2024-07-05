@@ -9,8 +9,26 @@ export default class Host {
         this.iframe.style.border = '0px'
     }
 
-    loadIframe(hostElement, iframeSource, callback) {
-        this.iframe.onload = callback
+    constructIframeUrl(parentId, data) {
+        let url = `${data.connectorUrl}/?parentId=${parentId}&channel=${data.channel}&conversationProfile=${data.conversationProfile}`
+
+        if (data.conversationId) url += `&conversationId=${data.conversationId}`
+
+        data.modules.forEach((module) => {
+            url += `&modules=${module}`
+        })
+
+        if (Object.keys(data.auth)[0] === 'finesse') {
+            url += `&authType=finesse&token=${data.auth.finesse.token}`
+        }
+
+        return url
+    }
+
+    loadIframe(hostElement, iframeSource) {
+        this.hostElement = hostElement
+
+        if (this.iframe.src) this.hostElement.removeChild(this.iframe)
 
         this.iframe.src = iframeSource
 

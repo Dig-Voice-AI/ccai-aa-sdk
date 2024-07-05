@@ -1,3 +1,40 @@
+export const activateConversationDataSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+        },
+    },
+    additionalProperties: false
+}
+
+export const endConversationDataSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+    },
+    required: ['id'],
+    additionalProperties: false
+}
+
+export const startConversationDataSchema = {
+    type: 'object',
+    properties: {
+        isEventBased: {
+            type: 'boolean'
+        },
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+    },
+    required: ['id'],
+    additionalProperties: false
+}
+
 export const analyzeContentDataSchema = {
     type: 'object',
     properties: {
@@ -42,8 +79,9 @@ export const initializeDataSchema = {
         connectorUrl: {
             type: 'string'
         },
-        conversationId: {
-            type: 'string'
+        timeout: {
+            type: 'number',
+            minimum: 1000
         },
         conversationProfile: {
             type: 'string'
@@ -57,7 +95,7 @@ export const initializeDataSchema = {
                 skip: {
                     type: 'boolean'
                 },
-                cisco: {
+                finesse: {
                     type: 'object',
                     properties: {
                         token: {
@@ -82,24 +120,21 @@ export const initializeDataSchema = {
             oneOf: [{
                 required: ['skip']
             }, {
-                required: ['cisco']
+                required: ['finesse']
             }, {
                 required: ['genesys']
             }]
         },
-        features: {
+        modules: {
             type: 'array',
             minItems: 1,
             uniqueItems: true,
             items: {
                 enum: ['GEN_ASSIST', 'SUGGESTIONS', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT']
             }
-        },
-        iframeUrl: {
-            type: 'string'
         }
     },
-    required: ['connectorUrl', 'conversationProfile', 'channel', 'features', 'auth'],
+    required: ['connectorUrl', 'conversationProfile', 'channel', 'modules', 'auth'],
     additionalProperties: false
 }
 
@@ -114,21 +149,12 @@ export const navigateToSchema = {
     additionalProperties: false
 }
 
-export const searchAiSchema = {
-    type: 'object',
-    properties: {
-        text: {
-            type: 'string'
-        }
-    },
-    required: ['text'],
-    additionalProperties: false
-}
-
 export const topicTypes = [
     'analyze-content-response-received',
-    'connector-initialized',
+    'connector-initialization-response-received',
     'conversation-details-received',
+    'conversation-summarization-received',
     'list-messages-response-received',
+    'new-message-received',
     'smart-reply-selected'
 ]
