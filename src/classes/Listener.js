@@ -4,14 +4,28 @@ export default class Listener {
     }
 
     create(topic, callback) {
-        this.listeners.push({ topic: topic, callback: callback })
+        this.listeners.push({
+            topic: topic,
+            callback: callback
+        })
     }
 
-    onMessage(topic, data) {
+    onMessage(topic, {
+        success = "",
+        data = [],
+        message = "",
+        errors = {}
+    }) {
         this.listeners.forEach((listener) => {
             if (listener.topic !== topic) return
 
-            listener.callback(data)
+            listener.callback({
+                topic: topic,
+                success: success,
+                data: data,
+                message: message,
+                errors: errors
+            })
         })
     }
 }

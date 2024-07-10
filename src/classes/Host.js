@@ -7,35 +7,30 @@ export default class Host {
         this.iframe.style.height = '100%'
 
         this.iframe.style.border = '0px'
+
+        this.baseUrl = null
     }
 
-    constructIframeUrl(parentId, data) {
-        let url = `${data.connectorUrl}/?parentId=${parentId}&channel=${data.channel}&conversationProfile=${data.conversationProfile}`
+    loadIframe(baseUrl, sdkId, hostElement) {
+        this.baseUrl = baseUrl
 
-        if (data.conversationId) url += `&conversationId=${data.conversationId}`
+        const url = `${baseUrl}/?sdkId=${sdkId}`
 
-        data.modules.forEach((module) => {
-            url += `&modules=${module}`
-        })
-
-        if (Object.keys(data.auth)[0] === 'finesse') {
-            url += `&authType=finesse&token=${data.auth.finesse.token}`
-        }
-
-        return url
-    }
-
-    loadIframe(hostElement, iframeSource) {
         this.hostElement = hostElement
 
         if (this.iframe.src) this.hostElement.removeChild(this.iframe)
 
-        this.iframe.src = iframeSource
+        this.iframe.src = url
+
+        this.iframe.allow = "clipboard-write"
 
         hostElement.appendChild(this.iframe)
     }
 
-    sendMessage(data) {
-        this.iframe.contentWindow.postMessage(data, '*')
+    sendMessage(topic, data = null) {
+        this.iframe.contentWindow.postMessage({
+            topic: topic,
+            data: data
+        }, this.baseUrl)
     }
 }

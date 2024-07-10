@@ -1,43 +1,10 @@
-export const activateConversationDataSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-        },
-    },
-    additionalProperties: false
-}
-
-export const endConversationDataSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            minLength: 1
-        },
-    },
-    required: ['id'],
-    additionalProperties: false
-}
-
-export const startConversationDataSchema = {
-    type: 'object',
-    properties: {
-        isEventBased: {
-            type: 'boolean'
-        },
-        id: {
-            type: 'string',
-            minLength: 1
-        },
-    },
-    required: ['id'],
-    additionalProperties: false
-}
-
 export const analyzeContentDataSchema = {
     type: 'object',
     properties: {
+        id: {
+            type: 'string',
+            minLength: 1
+        },
         participantRole: {
             enum: ['END_USER', 'AUTOMATED_AGENT', 'HUMAN_AGENT']
         },
@@ -62,7 +29,49 @@ export const analyzeContentDataSchema = {
             additionalProperties: false
         }
     },
-    required: ['participantRole', 'request'],
+    required: ['participantRole', 'request', 'id'],
+    additionalProperties: false
+}
+
+export const activateConversationDataSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+    },
+    additionalProperties: false
+}
+
+export const leaveConversationDataSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+    },
+    required: ['id'],
+    additionalProperties: false
+}
+
+export const createConversationDataSchema = {
+    type: 'object',
+    properties: {
+        eventBased: {
+            type: 'boolean'
+        },
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+        displayName: {
+            type: 'string',
+            minLength: 1
+        }
+    },
+    required: ['id'],
     additionalProperties: false
 }
 
@@ -76,85 +85,78 @@ export const errorMessages = {
 export const initializeDataSchema = {
     type: 'object',
     properties: {
-        connectorUrl: {
+        baseUrl: {
             type: 'string'
         },
         timeout: {
             type: 'number',
-            minimum: 1000
+            minimum: 5000
         },
         conversationProfile: {
             type: 'string'
         },
-        channel: {
-            enum: ['chat', 'omnichannel', 'voice']
+        authenticationType: {
+            enum: ['skip', 'finesse', 'salesforce', 'genesys']
         },
-        auth: {
-            type: 'object',
-            properties: {
-                skip: {
-                    type: 'boolean'
-                },
-                finesse: {
-                    type: 'object',
-                    properties: {
-                        token: {
-                            type: 'string'
-                        }
-                    },
-                    required: ['token'],
-                    additionalProperties: false
-                },
-                genesys: {
-                    type: 'object',
-                    properties: {
-                        token: {
-                            type: 'string'
-                        }
-                    },
-                    required: ['token'],
-                    additionalProperties: false
-                }
-            },
-            additionalProperties: false,
-            oneOf: [{
-                required: ['skip']
-            }, {
-                required: ['finesse']
-            }, {
-                required: ['genesys']
-            }]
+        token: {
+            type: 'string'
         },
-        modules: {
-            type: 'array',
-            minItems: 1,
-            uniqueItems: true,
-            items: {
-                enum: ['GEN_ASSIST', 'SUGGESTIONS', 'SMART_REPLY', 'SUMMARIZATION', 'TRANSCRIPT']
-            }
+        allowManualSummarization: {
+            type: 'boolean'
+        },
+        displaySentiment: {
+            type: 'boolean'
+        },
+        enableAgentCoach: {
+            type: 'boolean'
+        },
+        enableTranscript: {
+            type: 'boolean'
+        },
+        enableSummarization: {
+            type: 'boolean'
+        },
+        largeDisplayMode: {
+            type: 'boolean'
         }
     },
-    required: ['connectorUrl', 'conversationProfile', 'channel', 'modules', 'auth'],
-    additionalProperties: false
+    required: ['baseUrl', 'conversationProfile', 'authenticationType'],
+    additionalProperties: true
 }
 
-export const navigateToSchema = {
+export const navigateToDataSchema = {
     type: 'object',
     properties: {
-        tab: {
-            enum: ['GEN_ASSIST', 'SMART_REPLY', 'SUGGESTIONS', 'SUMMARIZATION', 'TRANSCRIPT']
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+        page: {
+            enum: ['assist', 'conversation']
         }
     },
-    required: ['tab'],
+    required: ['id', 'page'],
     additionalProperties: false
 }
 
-export const topicTypes = [
-    'analyze-content-response-received',
-    'connector-initialization-response-received',
-    'conversation-details-received',
-    'conversation-summarization-received',
-    'list-messages-response-received',
-    'new-message-received',
-    'smart-reply-selected'
-]
+export const summarizeDataSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            minLength: 1
+        },
+    },
+    required: ['id'],
+    additionalProperties: false
+}
+
+export const topicType = {
+    analyzeContent: 'analyze-content',
+    initializeResponse: 'initialize-response',
+    loadResponse: 'load-response',
+    summarizeResponse: 'summarize-response',
+    updateTokenResponse: 'update-token-response'
+}
+
+export const topics = Object.values(topicType).filter((topic) => topic)

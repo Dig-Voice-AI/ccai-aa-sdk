@@ -2,12 +2,14 @@ import Ajv from 'ajv'
 import {
     activateConversationDataSchema,
     analyzeContentDataSchema,
-    endConversationDataSchema,
+    createConversationDataSchema,
     initializeDataSchema,
     errorMessages,
-    navigateToSchema,
-    startConversationDataSchema,
-    topicTypes
+    navigateToDataSchema,
+    summarizeDataSchema,
+    topicType,
+    topics,
+    leaveConversationDataSchema
 } from '@/constants'
 import Listener from '@/classes/Listener'
 import Host from '@/classes/Host'
@@ -16,29 +18,31 @@ export default class AgentAssistSdk {
     constructor() {
         this.ajv = new Ajv()
 
+        this.config = null
+
         this.host = new Host()
 
         this.listener = new Listener()
 
         this.initialized = false
 
-        this.parentId = crypto.randomUUID()
+        this.sdkId = crypto.randomUUID()
 
         window.addEventListener(
             'message',
             (event) => {
-                if (event.data.parentId !== this.parentId) return
+                if (event.origin !== this.host.baseUrl) return
 
-                console.log(
+                console.debug(
                     `SDK received message for topic = ${event.data.topic}. Data =`,
                     event.data.data
                 )
 
-                if (event.data.topic === 'connector-initialization-response-received') {
-                    if (!event.data.data.success) return
-
-                    this.initialized = true
+                if (event.data.topic === topicType.loadResponse) {
+                    this.host.sendMessage('initialize-request', this.config)
                 }
+
+                if (event.data.topic === topicType.initializeResponse && event.data.data.success) this.initialized = true
 
                 this.listener.onMessage(event.data.topic, event.data.data)
             },
@@ -49,10 +53,10 @@ export default class AgentAssistSdk {
     addListener(topic, callback) {
         console.log('Adding listener topic =', topic)
 
-        if (!topicTypes.includes(topic))
+        if (!topics.includes(topic))
             throw {
                 message: "Property 'topic' is invalid.",
-                errors: [`Valid values for topic are ${JSON.stringify(topicTypes)}.`]
+                errors: [`Valid values for topic are ${JSON.stringify(topics)}.`]
             }
 
         if (typeof callback !== 'function')
@@ -77,11 +81,7 @@ export default class AgentAssistSdk {
                 errors: validate.errors
             }
 
-        this.host.sendMessage({
-            ...data,
-            parentId: this.parentId,
-            topic: 'ACTIVATE_CONVERSATION'
-        })
+        this.host.sendMessage('activate-conversation', data)
     }
 
     analyzeContent(data) {
@@ -91,23 +91,51 @@ export default class AgentAssistSdk {
 
         const valid = validate(data)
 
-        if (!valid)
+        if (!valid) {
             throw {
                 message: "Property 'data' is invalid",
                 errors: validate.errors
             }
+        }
 
-        this.host.sendMessage({
-            ...data,
-            parentId: this.parentId,
-            topic: 'ANALYZE_CONTENT'
-        })
+        this.host.sendMessage('analyze-content', data)
     }
 
-    endConversation(data) {
+    createConversation(data) {
         if (!this.initialized) throw errorMessages.UNINITIALIZED
 
-        const validate = this.ajv.compile(endConversationDataSchema)
+        const validate = this.ajv.compile(createConversationDataSchema)
+
+        const valid = validate(data)
+
+        if (!valid) {
+            throw {
+                message: "Property 'data' is invalid",
+                errors: validate.errors
+            }
+        }
+
+        this.host.sendMessage('create-conversation', data)
+    }
+
+    createErrorResponse({
+        success = "",
+        data = [],
+        message = "",
+        errors = {}
+    }) {
+        return {
+            success: success,
+            data: data,
+            message: message,
+            errors: errors
+        }
+    }
+
+    leaveConversation(data) {
+        if (!this.initialized) throw errorMessages.UNINITIALIZED
+
+        const validate = this.ajv.compile(leaveConversationDataSchema)
 
         const valid = validate(data)
 
@@ -117,55 +145,54 @@ export default class AgentAssistSdk {
                 errors: validate.errors
             }
 
-        this.host.sendMessage({
-            ...data,
-            parentId: this.parentId,
-            topic: 'END_CONVERSATION'
-        })
+        this.host.sendMessage('leave-conversation', data)
     }
 
     initialize(el, data) {
         this.initialized = false
 
-        return new Promise((resolve, reject) => {
-            if (!document.body.contains(el))
-                return reject({
-                    message: 'Element not found in document body',
-                    errors: ['You must pass a valid element.']
+        if (!document.body.contains(el)) {
+            throw this.createErrorResponse({
+                success: false,
+                message: 'You must pass a valid element.',
+                errors: ['Element not found in document body']
+            })
+        }
+
+        const validate = this.ajv.compile(initializeDataSchema)
+
+        const valid = validate(data)
+
+        if (!valid) {
+            throw this.createErrorResponse({
+                success: false,
+                message: "Property 'data' must be valid",
+                errors: validate.errors
+            })
+        }
+
+
+        if (data.timeout) {
+            setTimeout(() => {
+                if (this.initialized) return
+
+                this.listener.onMessage(topicType.initializeResponse, {
+                    success: false,
+                    message: `Initialization must complete within ${data.timeout}ms`,
+                    errors: [`The request timed out`],
                 })
+            }, data.timeout)
+        }
 
-            const validate = this.ajv.compile(initializeDataSchema)
+        this.config = data
 
-            const valid = validate(data)
-
-            if (!valid)
-                return reject({
-                    message: "Property 'data' is invalid",
-                    errors: validate.errors
-                })
-
-            if (data.timeout) {
-                setTimeout(() => {
-                    if (this.initialized) return
-
-                    this.listener.onMessage('connector-initialization-response-received', {
-                        success: false
-                    })
-                }, data.timeout)
-            }
-
-            const url = this.host.constructIframeUrl(this.parentId, data)
-
-            this.host.loadIframe(el, url)
-
-            return resolve()
-        })
+        this.host.loadIframe(data.baseUrl, this.sdkId, el)
     }
 
     navigateTo(data) {
         if (!this.initialized) throw errorMessages.UNINITIALIZED
 
-        const validate = this.ajv.compile(navigateToSchema)
+        const validate = this.ajv.compile(navigateToDataSchema)
 
         const valid = validate(data)
 
@@ -175,17 +202,13 @@ export default class AgentAssistSdk {
                 errors: validate.errors
             }
 
-        this.host.sendMessage({
-            ...data,
-            parentId: this.parentId,
-            topic: 'NAVIGATE'
-        })
+        this.host.sendMessage('navigate-to', data)
     }
 
-    startConversation(data) {
+    summarize(data) {
         if (!this.initialized) throw errorMessages.UNINITIALIZED
 
-        const validate = this.ajv.compile(startConversationDataSchema)
+        const validate = this.ajv.compile(summarizeDataSchema)
 
         const valid = validate(data)
 
@@ -195,10 +218,18 @@ export default class AgentAssistSdk {
                 errors: validate.errors
             }
 
-        this.host.sendMessage({
-            ...data,
-            parentId: this.parentId,
-            topic: 'START_CONVERSATION'
+        this.host.sendMessage('summarize', data)
+    }
+
+    updateToken(data) {
+        console.debug('Update token request received.', data.token)
+
+        if (!data.token) throw this.createErrorResponse({
+            success: false,
+            message: "A token must be provided.",
+            errors: ['No token was provided.']
         })
+
+        this.host.sendMessage('update-token', data)
     }
 }
