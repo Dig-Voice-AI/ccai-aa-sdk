@@ -98,7 +98,7 @@ export const initializeDataSchema = {
         authenticationType: {
             enum: ['skip', 'finesse', 'salesforce', 'genesys']
         },
-        token: {
+        authenticationToken: {
             type: 'string'
         },
         allowManualSummarization: {
@@ -155,6 +155,8 @@ export const topicType = {
     analyzeContent: 'analyze-content',
     initializeResponse: 'initialize-response',
     loadResponse: 'load-response',
+    authenticateResponse: 'authenticate-response',
+    setupResponse: 'setup-response',
     summarizeResponse: 'summarize-response',
     updateTokenResponse: 'update-token-response'
 }

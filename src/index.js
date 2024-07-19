@@ -39,10 +39,18 @@ export default class AgentAssistSdk {
                 )
 
                 if (event.data.topic === topicType.loadResponse) {
-                    this.host.sendMessage('initialize-request', this.config)
+                    return this.host.sendMessage('authenticate', this.config)
                 }
 
-                if (event.data.topic === topicType.initializeResponse && event.data.data.success) this.initialized = true
+                if (event.data.topic === topicType.authenticateResponse && !this.initialized) {
+                    if (event.data.data.success && !this.initialized) return this.host.sendMessage('setup', this.config)
+                }
+
+                if (event.data.topic === topicType.setupResponse) {
+                    console.log("NATHAN")
+                    console.log(event.data, event.data.data, event.data.data.success, event.data.success)
+                    return this.listener.onMessage(topicType.initializeResponse, event.data.data)
+                }
 
                 this.listener.onMessage(event.data.topic, event.data.data)
             },
@@ -159,18 +167,17 @@ export default class AgentAssistSdk {
             })
         }
 
-        const validate = this.ajv.compile(initializeDataSchema)
+        // const validate = this.ajv.compile(initializeDataSchema)
 
-        const valid = validate(data)
+        // const valid = validate(data)
 
-        if (!valid) {
-            throw this.createErrorResponse({
-                success: false,
-                message: "Property 'data' must be valid",
-                errors: validate.errors
-            })
-        }
-
+        // if (!valid) {
+        //     throw this.createErrorResponse({
+        //         success: false,
+        //         message: "Property 'data' must be valid",
+        //         errors: validate.errors
+        //     })
+        // }
 
         if (data.timeout) {
             setTimeout(() => {
